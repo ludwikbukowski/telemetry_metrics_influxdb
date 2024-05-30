@@ -45,21 +45,7 @@ defmodule TelemetryInfluxDB.Formatter do
   end
 
   # https://docs.influxdata.com/influxdb/v1.7/write_protocols/line_protocol_tutorial/
-  defp escape_special_chars(str) do
-    escape_special_chars(str, "")
+  defp escape_special_chars(string) do
+    Regex.replace(~r/[=|,| |\"]/, string, fn a, _ -> "\\" <> a end)
   end
-
-  defp escape_special_chars(<<>>, acc), do: acc
-
-  defp escape_special_chars(<<c::8, rest::binary>>, acc) do
-    escape_special_chars(rest, acc <> e(<<c>>))
-  end
-
-  @compile {:inline, e: 1}
-
-  defp e(<<"=">>), do: "\\="
-  defp e(<<",">>), do: "\\,"
-  defp e(<<"\"">>), do: "\\\""
-  defp e(<<" ">>), do: "\\ "
-  defp e(c), do: c
 end
