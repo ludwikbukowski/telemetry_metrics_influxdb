@@ -16,14 +16,14 @@ defmodule TelemetryInfluxDB.FormatterTest do
     assert Formatter.format([:rainy, :day], %{"temperature" => 13, "wind" => "medium"}, %{
              topic: :weather
            }) ==
-             "rainy.day,topic=\"weather\" temperature=13,wind=\"medium\""
+             "rainy.day,topic=weather temperature=13,wind=\"medium\""
   end
 
   test "formats the point given binary tags" do
     assert Formatter.format([:snowy, :day], %{"temperature" => -5, "wind" => "medium"}, %{
              "topic" => "weather"
            }) ==
-             "snowy.day,topic=\"weather\" temperature=-5,wind=\"medium\""
+             "snowy.day,topic=weather temperature=-5,wind=\"medium\""
   end
 
   test "formats the point with multiple tags and multiple fields" do
@@ -31,7 +31,7 @@ defmodule TelemetryInfluxDB.FormatterTest do
              "tag1" => "tag1_val",
              "tag2" => "tag2_val"
            }) ==
-             "event,tag1=\"tag1_val\",tag2=\"tag2_val\" field1=\"field1_val\",field2=\"field2_val\""
+             "event,tag1=tag1_val,tag2=tag2_val field1=\"field1_val\",field2=\"field2_val\""
   end
 
   test "properly formats the point with integer" do

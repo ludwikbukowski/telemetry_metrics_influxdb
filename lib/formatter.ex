@@ -11,20 +11,18 @@ defmodule TelemetryInfluxDB.Formatter do
   end
 
   defp format_measurements(measurements) do
-    " " <> comma_separated(measurements)
+    " " <> comma_separated(measurements, &to_bin_quoted/1)
   end
+
+  defp format_tags(tags) when tags == %{}, do: ""
 
   defp format_tags(tags) do
-    if tags != %{} do
-      "," <> comma_separated(binary_map(tags))
-    else
-      ""
-    end
+    "," <> comma_separated(tags, &to_bin/1)
   end
 
-  defp comma_separated(measurements) do
-    measurements
-    |> Enum.map(fn {k, v} -> to_bin(k) <> "=" <> to_bin_quoted(v) end)
+  defp comma_separated(map, format_value) do
+    map
+    |> Enum.map(fn {k, v} -> to_bin(k) <> "=" <> format_value.(v) end)
     |> Enum.join(",")
   end
 
@@ -39,10 +37,6 @@ defmodule TelemetryInfluxDB.Formatter do
   defp to_bin_quoted(val) when is_boolean(val), do: to_bin(val)
   defp to_bin_quoted(val) when is_map(val), do: "\"" <> to_bin(val) <> "\""
   defp to_bin_quoted(val), do: "\"" <> to_bin(val) <> "\""
-
-  defp binary_map(atomized_map) do
-    Map.new(atomized_map, fn {k, v} -> {to_bin(k), to_bin(v)} end)
-  end
 
   # https://docs.influxdata.com/influxdb/v1.7/write_protocols/line_protocol_tutorial/
   defp escape_special_chars(str) do
