@@ -3,8 +3,6 @@ defmodule TelemetryInfluxDB.HTTP.Pool do
   require Logger
   alias TelemetryInfluxDB, as: InfluxDB
 
-  @default_workers_num 3
-
   @spec child_spec(InfluxDB.config()) :: Supervisor.child_spec()
   def child_spec(config) do
     config = %{config | port: :erlang.integer_to_binary(config.port)}
@@ -16,7 +14,7 @@ defmodule TelemetryInfluxDB.HTTP.Pool do
       id: pool_name(config.reporter_name),
       start:
         {:wpool, :start_pool,
-         [pool_name(config.reporter_name), [{:workers, @default_workers_num}]]}
+         [pool_name(config.reporter_name), [{:workers, config.worker_pool_size}]]}
     }
   end
 

@@ -64,6 +64,7 @@ Possible options for the reporter:
  - `:tags` - list of global static tags, that will be attached to each reported event. The format is a map,
     where the key and the value are tag's name and value, respectively.
     Both the tag's name and the value could be atoms or binaries.
+ - `:worker_pool_size` - specify the number of workers to use to send events to InfluxDB via HTTP. Only used when `:protocol` is set to `:http`. (default 3)
 ### V1 Only Options
  - `:db` - name of the location where time series data is stored in InfluxDB v1
  - `:username` - username of InfluxDB's user that has writes privileges. Only required in v1.
